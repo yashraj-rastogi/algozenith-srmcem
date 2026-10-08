@@ -1,0 +1,17 @@
+{
+  "name": "algozenith-srmcem",
+  "version": "1.0.0",
+  "description": "Official Website for AlgoZenith SRMCEM Chapter",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "dev:client": "npm run dev --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "build:client": "npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
+    "seed": "npm run seed --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
