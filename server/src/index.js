@@ -13,18 +13,41 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect Database
+// Connect Database on boot (in standard Node environment)
 connectDB();
 
-// Middlewares
+// Ensure DB connection for serverless invocations (e.g. Vercel)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+  } catch (err) {
+    console.warn('Middleware DB connection check warning:', err.message);
+  }
+  next();
+});
+
+// Dynamic CORS configuration (supports localhost, custom domains, and Vercel deployments)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    process.env.CLIENT_URL || 'http://localhost:5173'
-  ],
-  credentials: true
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith('.vercel.app') ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
 }));
+
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -44,7 +67,7 @@ app.get('/', (req, res) => {
       events: '/api/events',
       members: '/api/members',
       inquiries: '/api/inquiries',
-    }
+    },
   });
 });
 
@@ -52,7 +75,7 @@ app.get('/', (req, res) => {
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: `API Route not found: ${req.method} ${req.originalUrl}`
+    message: `API Route not found: ${req.method} ${req.originalUrl}`,
   });
 });
 
@@ -62,13 +85,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n=================================================`);
-  console.log(`⚡ AlgoZenith SRMCEM Server running on port ${PORT}`);
-  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`=================================================\n`);
-});
+// Start HTTP server only when not running as a Vercel Serverless Function
+if (process.env.VERCEL !== '1') {
+  app.listen(PORT, () => {
+    console.log(`\n=================================================`);
+    console.log(`⚡ AlgoZenith SRMCEM Server running on port ${PORT}`);
+    console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`=================================================\n`);
+  });
+}
+
+export default app;

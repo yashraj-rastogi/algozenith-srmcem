@@ -46,6 +46,23 @@ export const getEventById = async (req, res) => {
   }
 };
 
+export const getEventBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const isDbConnected = mongoose.connection.readyState === 1;
+    if (isDbConnected) {
+      const event = await Event.findOne({ slug });
+      if (event) return res.json({ success: true, data: event });
+    }
+    const mock = mockEvents.find(e => e.slug === slug);
+    if (mock) return res.json({ success: true, data: mock });
+    return res.status(404).json({ success: false, message: `Event with slug '${slug}' not found` });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
 export const createEvent = async (req, res) => {
   try {
     const isDbConnected = mongoose.connection.readyState === 1;

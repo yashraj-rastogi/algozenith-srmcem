@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowRight, Code2, Sparkles, Trophy, Users, Terminal, Cpu } from 'lucide-react';
+import { ArrowRight, Code2, Sparkles, Trophy, Users, Terminal, Cpu, BookOpen } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Hero = () => {
   return (
@@ -15,23 +16,23 @@ export const Hero = () => {
           </div>
 
           <h1 className="hero-title">
-            Where <span className="gradient-text">Algorithms</span> Meet{' '}
-            <span className="hero-highlight">Infinite Ambition</span>
+            Master <span className="gradient-text">DSA</span>. Crack Hackathons.{' '}
+            <span className="hero-highlight">Land Tier-1 Placements.</span>
           </h1>
 
           <p className="hero-description">
-            Welcome to <strong>AlgoZenith SRMCEM</strong> — the premier student hub for Competitive Programming, Data Structures & Algorithms, and modern Full Stack Engineering. We transform collegiate coders into top-tier problem solvers.
+            The official student developer and competitive programming chapter of <strong>SRMCEM</strong>. From your first line of code to your final interview.
           </p>
 
           <div className="hero-cta-group">
-            <a href="#events" className="btn btn-primary">
-              <span>Explore Events & Contests</span>
+            <Link to="/events/7-day-java-logic-bootcamp" className="btn btn-primary">
+              <span>Register for Day 1 Bootcamp</span>
               <ArrowRight size={18} />
-            </a>
-            <a href="#roadmap" className="btn btn-secondary">
+            </Link>
+            <Link to="/resources" className="btn btn-secondary">
               <Code2 size={18} />
-              <span>CP Roadmap 2026</span>
-            </a>
+              <span>Explore Club Resources</span>
+            </Link>
           </div>
 
           {/* Social Proof Stats */}
@@ -42,13 +43,18 @@ export const Hero = () => {
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
+              <div className="stat-number">120+</div>
+              <div className="stat-label">Bootcamp Registrations</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-item">
               <div className="stat-number">35+</div>
               <div className="stat-label">Weekly Contests</div>
             </div>
             <div className="stat-divider"></div>
             <div className="stat-item">
               <div className="stat-number">15+</div>
-              <div className="stat-label">Tech Bootcamps</div>
+              <div className="stat-label">Hackathon Wins</div>
             </div>
           </div>
         </div>
